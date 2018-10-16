@@ -146,7 +146,6 @@ Component({
 
     handleChange({ detail: { value }}) {
       this._value = value
-      console.log(value)
       this.triggerEvent('change', { value: this.value() })
     }
   },
