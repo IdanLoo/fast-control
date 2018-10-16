@@ -1,8 +1,8 @@
 {
-  "name": "miniprogram-custom-component",
+  "name": "fast-control",
   "version": "1.0.0",
   "description": "",
-  "main": "miniprogram_dist/index.js",
+  "main": "miniprogram_dist/date-picker.js",
   "scripts": {
     "dev": "gulp dev --develop",
     "watch": "gulp watch --develop --watch",
