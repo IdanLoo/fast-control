@@ -1,0 +1,6 @@
+<picker
+  mode='multiSelector'
+  range='{{ranges}}'
+  bind:columnchange='handleColumnChange'
+  bind:change='handleChange'
+><slot></slot></picker>

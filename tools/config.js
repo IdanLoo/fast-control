@@ -12,7 +12,7 @@ const dev = path.join(demoDist, 'components')
 const dist = path.resolve(__dirname, '../miniprogram_dist')
 
 module.exports = {
-  entry: ['index'],
+  entry: ['date-picker'],
 
   isDev,
   isWatch,
@@ -23,7 +23,7 @@ module.exports = {
   demoDist,
 
   wxss: {
-    less: false, // compile wxss with less
+    less: true, // compile wxss with less
     sourcemap: false, // source map for less
   },
 
@@ -40,7 +40,6 @@ module.exports = {
         test: /\.js$/i,
         use: [
           'babel-loader',
-          'eslint-loader'
         ],
         exclude: /node_modules/
       }],
