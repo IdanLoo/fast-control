@@ -7,18 +7,18 @@ const columnNames = ['FullYear', 'Month', 'Date', 'Hours', 'Minutes']
 Component({
   properties: {
     startAt: {
-      type: String,
+      type: null,
       value: '2000/01/01 00:00',
       observer() {
-        this._initStartAt()
+        this._init()
       }
     },
 
     endAt: {
-      type: String,
+      type: null,
       value: '2099/12/31 23:59',
       observer() {
-        this._initEndAt()
+        this._init()
       }
     },
 
@@ -54,13 +54,19 @@ Component({
 
   methods: {
     _init() {
+      console.log('observer init')
+      const { startAt, endAt } = this.data
       this._value = Array(5).fill(0)
-      this._initStartAt()
-      this._initEndAt()
+
+      this._initStartAt(startAt)
+      this._initEndAt(endAt)
+      this._initRanges()
+
+      this._inited = true
     },
 
-    _initStartAt() {
-      this._startAt = new Date(this.data.startAt)
+    _initStartAt(startAt) {
+      this._startAt = new Date(startAt)
 
       this._startAtYear = this._startAt.getFullYear()
       this._startAtMonth = this._startAt.getMonth() + 1
@@ -69,8 +75,8 @@ Component({
       this._startAtMinute = this._startAt.getMinutes()
     },
 
-    _initEndAt() {
-      this._endAt = new Date(this.data.endAt)
+    _initEndAt(endAt) {
+      this._endAt = new Date(endAt)
 
       this._endAtYear = this._endAt.getFullYear()
       this._endAtMonth = this._endAt.getMonth() + 1
@@ -174,7 +180,8 @@ Component({
   },
 
   ready() {
-    this._init()
-    this._initRanges()
+    if (!this._inited) {
+      this._init()
+    }
   }
 })
