@@ -1,9 +1,9 @@
-export const arrayFrom = (head, tail) => {
-  const length = tail - head + 1
+export const arrayFrom = (head, tail, step = 1) => {
+  const array = []
 
-  if (length < 0) {
-    return []
+  for (let i = head; i <= tail; i += step) {
+    array.push(i)
   }
 
-  return Array(length).fill(0).map((_, index) => index + head)
+  return array
 }

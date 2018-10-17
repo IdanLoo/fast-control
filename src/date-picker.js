@@ -10,7 +10,7 @@ Component({
       type: String,
       value: '2000/01/01 00:00',
       observer() {
-        this._init()
+        this._initStartAt()
       }
     },
 
@@ -18,8 +18,33 @@ Component({
       type: String,
       value: '2099/12/31 23:59',
       observer() {
-        this._init()
+        this._initEndAt()
       }
+    },
+
+    minuteStep: {
+      type: Number,
+      value: 1
+    },
+
+    hourStep: {
+      type: Number,
+      value: 1
+    },
+
+    dateStep: {
+      type: Number,
+      value: 1
+    },
+
+    monthStep: {
+      type: Number,
+      value: 1
+    },
+
+    yearStep: {
+      type: Number,
+      value: 1
     }
   },
 
@@ -29,17 +54,23 @@ Component({
 
   methods: {
     _init() {
-      const { startAt, endAt } = this.data
-
       this._value = Array(5).fill(0)
-      this._startAt = new Date(startAt)
-      this._endAt = new Date(endAt)
+      this._initStartAt()
+      this._initEndAt()
+    },
+
+    _initStartAt() {
+      this._startAt = new Date(this.data.startAt)
 
       this._startAtYear = this._startAt.getFullYear()
       this._startAtMonth = this._startAt.getMonth() + 1
       this._startAtDate = this._startAt.getDate()
       this._startAtHour = this._startAt.getHours()
       this._startAtMinute = this._startAt.getMinutes()
+    },
+
+    _initEndAt() {
+      this._endAt = new Date(this.data.endAt)
 
       this._endAtYear = this._endAt.getFullYear()
       this._endAtMonth = this._endAt.getMonth() + 1
@@ -70,18 +101,19 @@ Component({
       return compared[`get${colName}`]() === date[`get${colName}`]()
     },
 
-    _range(name, sameAsStart, sameAsEnd) {
-      return this[`_${name}Range`](sameAsStart, sameAsEnd)
-    },
-
     _yearRange() {
-      return arrayFrom(this._startAtYear, this._endAtYear)
+      return arrayFrom(
+        this._startAtYear,
+        this._endAtYear,
+        this.data.yearStep
+      )
     },
 
     _monthRange(sameAsStart, sameAsEnd) {
       return arrayFrom(
         sameAsStart ? this._startAtMonth : 1,
-        sameAsEnd ? this._endAtMonth : 12
+        sameAsEnd ? this._endAtMonth : 12,
+        this.data.monthRange
       )
     },
 
@@ -91,34 +123,25 @@ Component({
         sameAsEnd ? this._endAtDate : (() => {
           const value = this.value()
           return dateCount(value.getFullYear(), value.getMonth() + 1)
-        })()
+        })(),
+        this.data.dateRange
       )
     },
 
     _hourRange(sameAsStart, sameAsEnd) {
       return arrayFrom(
         sameAsStart ? this._startAtHour : 0,
-        sameAsEnd ? this._endAtHour : 23
+        sameAsEnd ? this._endAtHour : 23,
+        this.data.hourStep
       )
     },
 
     _minuteRange(sameAsStart, sameAsEnd) {
       return arrayFrom(
         sameAsStart ? this._startAtMinute : 0,
-        sameAsEnd ? this._endAtMinute : 59
+        sameAsEnd ? this._endAtMinute : 59,
+        this.data.minuteStep
       )
-    },
-
-    _setRanges(ranges) {
-      const monthRange = this._monthRange(true)
-      const dateRange = this._dateRange(true)
-      const hourRange = arrayFrom(0, 23)
-      const minuteRange = arrayFrom(0, 59)
-      
-      this._ranges = [yearRange, monthRange, dateRange, hourRange, minuteRange]
-      this.setData({
-        yearRange, monthRange, dateRange, hourRange, minuteRange
-      })
     },
 
     value() {
