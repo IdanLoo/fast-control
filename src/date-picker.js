@@ -22,6 +22,16 @@ Component({
       }
     },
 
+    hourStart: {
+      type: Number,
+      value: 0
+    },
+
+    hourEnd: {
+      type: Number,
+      value: 23
+    },
+
     minuteStep: {
       type: Number,
       value: 1
@@ -54,7 +64,6 @@ Component({
 
   methods: {
     _init() {
-      console.log('observer init')
       const { startAt, endAt } = this.data
       this._value = Array(5).fill(0)
 
@@ -112,7 +121,7 @@ Component({
         this._startAtYear,
         this._endAtYear,
         this.data.yearStep
-      )
+      ).map(y => `${y}年`)
     },
 
     _monthRange(sameAsStart, sameAsEnd) {
@@ -121,6 +130,8 @@ Component({
         sameAsEnd ? this._endAtMonth : 12,
         this.data.monthRange
       )
+        .map(m => String(m).padStart(2, '0'))
+        .map(m => `${m}月`)
     },
 
     _dateRange(sameAsStart, sameAsEnd) {
@@ -132,14 +143,23 @@ Component({
         })(),
         this.data.dateRange
       )
+        .map(d => String(d).padStart(2, '0'))
+        .map(d => `${d}日`)
     },
 
     _hourRange(sameAsStart, sameAsEnd) {
+      const { hourStart, hourEnd } = this.data
+
+      let head = sameAsStart ? this._startAtHour : 0
+      let tail = sameAsEnd ? this._endAtHour : 23
+
+      head = Math.max(hourStart, head)
+      tail = Math.min(hourEnd, tail)
+
       return arrayFrom(
-        sameAsStart ? this._startAtHour : 0,
-        sameAsEnd ? this._endAtHour : 23,
+        head, tail,
         this.data.hourStep
-      )
+      ).map(d => String(d).padStart(2, '0'))
     },
 
     _minuteRange(sameAsStart, sameAsEnd) {
@@ -147,15 +167,16 @@ Component({
         sameAsStart ? this._startAtMinute : 0,
         sameAsEnd ? this._endAtMinute : 59,
         this.data.minuteStep
-      )
+      ).map(d => String(d).padStart(2, '0'))
     },
 
     value() {
       const { _value } = this
       const { ranges } = this.data
 
-      const [year, month, date, hour, minute] =
-        _value.map((v, i) => ranges[i][v])
+      const [year, month, date, hour, minute] = _value
+        .map((v, i) => ranges[i][v])
+        .map(s => s && s.match(/^\d+/g))
 
       return new Date(`${[year, month, date].join('/')} ${[hour, minute].join(':')}`)
     },
