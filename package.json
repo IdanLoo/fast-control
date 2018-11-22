@@ -13,7 +13,8 @@
     "test": "jest ./test/* --silent --bail",
     "coverage": "jest ./test/* --coverage --bail",
     "lint": "eslint \"src/**/*.js\"",
-    "lint-tools": "eslint \"tools/**/*.js\" --rule \"import/no-extraneous-dependencies: false\""
+    "lint-tools": "eslint \"tools/**/*.js\" --rule \"import/no-extraneous-dependencies: false\"",
+    "postversion": "npm publish"
   },
   "miniprogram": "miniprogram_dist",
   "jest": {
